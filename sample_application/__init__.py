@@ -6,6 +6,8 @@ from flask_wtf.file import FileField
 from wtforms import TextField, HiddenField, ValidationError, RadioField,\
     BooleanField, SubmitField, IntegerField, FormField, validators
 from wtforms.validators import Required
+from sample_application import pythonsqllite
+import pandas as pd
 
 
 # straight from the wtforms docs:
@@ -20,7 +22,7 @@ class ExampleForm(Form):
     field2 = TextField('Second Field', description='This is field two.',
                        validators=[Required()])
     hidden_field = HiddenField('You cannot see this', description='Nope')
-    recaptcha = RecaptchaField('A sample recaptcha field')
+    #recaptcha = RecaptchaField('A sample recaptcha field')
     radio_field = RadioField('This is a radio field', choices=[
         ('head_radio', 'Head radio'),
         ('radio_76fm', "Radio '76 FM"),
@@ -54,21 +56,31 @@ def create_app(configfile=None):
 
     # in a real app, these should be configured through Flask-Appconfig
     app.config['SECRET_KEY'] = 'devkey'
-    app.config['RECAPTCHA_PUBLIC_KEY'] = \
-        '6Lfol9cSAAAAADAkodaYl9wvQCwBMr3qGR_PPHcw'
+    #app.config['RECAPTCHA_PUBLIC_KEY'] = \
+    #    '6Lfol9cSAAAAADAkodaYl9wvQCwBMr3qGR_PPHcw'
 
     @app.route('/', methods=('GET', 'POST'))
     def index():
         form = ExampleForm()
         form.validate_on_submit()  # to get error messages to the browser
-        flash('critical message', 'critical')
-        flash('error message', 'error')
-        flash('warning message', 'warning')
-        flash('info message', 'info')
-        flash('debug message', 'debug')
-        flash('different message', 'different')
-        flash('uncategorized message')
-        return render_template('index.html', form=form)
+
+        database = r"/Users/bhatnagarakshit10/Documents/flask-bootstrap/pythonsqlite.db"
+
+        conn = pythonsqllite.create_connection(database)
+        with conn:
+            df = pythonsqllite.read_data(conn)
+            df = pd.read_csv('/Users/bhatnagarakshit10/Documents/flask-bootstrap/usa_lat_long.csv',index_col=False)
+            print (len(df))
+            print (len(df.to_dict('records')))
+        #flash('critical message', 'critical')
+        #flash('error message', 'error')
+        #flash('warning message', 'warning')
+        #flash('info message', 'info')
+        #flash('debug message', 'debug')
+        #flash('different message', 'different')
+        #flash('uncategorized message')
+        #return render_template('index.html', form=form, data=df.to_dict('records'), len=len(df))
+        return render_template('index.html', data=df.T.to_dict().values(), len=len(df))
 
     return app
 

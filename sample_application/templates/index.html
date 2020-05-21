@@ -1,25 +1,67 @@
-{% extends "bootstrap/base.html" %}
-{% import "bootstrap/wtf.html" as wtf %}
-{% import "bootstrap/fixes.html" as fixes %}
-{% import "bootstrap/utils.html" as util %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>WCFraud</title>
+    <h1>WC Fraud Alerts</h1>
 
-{% block content %}
-{{util.flashed_messages(dismissible=True)}}
-<div class="container">
-  <h1>Hello, world!</h1>
-
-  <h2>This is the sample form (basic)</h2>
-  {{ wtf.quick_form(form, button_map={'submit_button': 'primary'}) }}
-
-  <h2>The same form, inline</h2>
-  {{ wtf.quick_form(form, form_type='inline', button_map={'submit_button': 'primary'}) }}
-
-  <h2>And as a horizontal form</h2>
-  {{ wtf.quick_form(form, form_type='horizontal', button_map={'submit_button': 'primary'})}}
-</div>
-{% endblock %}
-
-{% block head %}
-{{super()}}
-{{fixes.ie8()}}
-{% endblock %}
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.css">
+  </head>
+  <body>
+    <div class="toolbar">
+      Total rows: <span id="total">{{ len }}</span>
+    </div>
+    <table data-toggle="table" data-toolbar=".toolbar"
+    data-height="600"
+    data-virtual-scroll="true"
+    data-show-columns="true"
+    data-response-handler="responseHandler">
+      <thead>
+        <tr>
+          <th data-field="state" data-checkbox="true"></th>
+            <th>State</th>
+            <th>Country</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Response</th>
+            <th>Comments</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for row in data %}
+              <tr>
+                <th data-field="state" data-checkbox="true"></th>
+               <td>{{ row.State }}</td>
+               <td>{{ row.country }}</td>
+               <td>{{ row.latitude }}</td>
+               <td>{{ row.longitude }}</td>
+               <td><input id="inputvalue2" type="text" name="quantity" value=""></input></td>
+               <td><select id = "myList">
+                <option value = "1">one</option>
+                <option value = "2">two</option>
+                <option value = "3">three</option>
+                <option value = "4">four</option>
+               </select>
+              </input></td>
+             </tr> 
+      {% endfor %}
+      </tbody>
+    </table>
+    <script>
+    function responseHandler(res) {
+      $.each(res.rows, function (i, row) {
+        row.state = $.inArray(row.id, selections) !== -1
+      })
+      return res
+    }
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.15.5/dist/bootstrap-table.min.js"></script>
+  </body>
+</html>

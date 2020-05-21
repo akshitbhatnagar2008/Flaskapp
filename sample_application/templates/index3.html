@@ -1,0 +1,79 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>CSV Downloader</title>
+</head>
+<body>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.2/papaparse.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/0.71/jquery.csv-0.71.min.js"></script>
+<script>
+    // function arrayToTable(tableData) {
+    //     var table = $('<table></table>');
+    //     $(tableData).each(function (i, rowData) {
+    //         var row = $('<tr></tr>');
+    //         $(rowData).each(function (j, cellData) {
+    //             row.append($('<td>'+cellData+'</td>'));
+    //         });
+    //         table.append(row);
+    //     });
+    //     return table;
+    // }
+
+    // $.ajax({
+    //     type: "GET",
+    //     url: "/Users/bhatnagarakshit10/Documents/DSE/akbhatna/DSE200/day_2_github_io_numpy_pandas/04_learn-pandas/lessons/DataFiles/usa_lat_long.csv",
+    //     success: function (data) {
+    //         $('body').append(arrayToTable(Papa.parse(data).data));
+    //     }
+    // });
+
+    function generateHtmlTable(data) {
+    var html = '<table  class="table table-condensed table-hover table-striped">';
+ 
+      if(typeof(data[0]) === 'undefined') {
+        return null;
+      } else {
+		$.each(data, function( index, row ) {
+		  //bind header
+		  if(index == 0) {
+			html += '<thead>';
+			html += '<tr>';
+			$.each(row, function( index, colData ) {
+				html += '<th>';
+				html += colData;
+				html += '</th>';
+			});
+			html += '</tr>';
+			html += '</thead>';
+			html += '<tbody>';
+		  } else {
+			html += '<tr>';
+			$.each(row, function( index, colData ) {
+				html += '<td>';
+				html += colData;
+				html += '</td>';
+			});
+			html += '</tr>';
+		  }
+		});
+		html += '</tbody>';
+		html += '</table>';
+		alert(html);
+		$('#csv-display').append(html);
+	  }
+	}
+    var data;
+	$.ajax({
+	  type: "GET",  
+	  url: "Users/bhatnagarakshit10/Documents/flask-bootstrap/usa_lat_long.csv",
+	  dataType: "text",       
+	  success: function(response)  
+	  {
+		data = $.csv.toArrays(response);
+		generateHtmlTable(data);
+	  }   
+	});	
+</script>
+</body>
